@@ -1,15 +1,27 @@
-import streamlit as st
-from eda_engine import load_data, get_basic_summary
+import argparse
+from eda_engine import (
+    load_dataset,
+    get_basic_summary,
+    get_column_types,
+    get_statistical_summary
+)
 
-st.title("Smart Data Cleaning Assistant")
+def main():
+    parser = argparse.ArgumentParser(description="Smart EDA Assistant")
+    parser.add_argument("--file", type=str, required=True, help="Path to dataset file")
 
-uploaded_file = st.file_uploader("Upload your dataset (CSV format)", type=["csv"])
+    args = parser.parse_args()
 
-if uploaded_file:
-    df = load_data(uploaded_file)
-    st.write("Dataset Preview")
-    st.dataframe(df.head())
+    df = load_dataset(args.file)
 
-    summary = get_basic_summary(df)
-    st.write("Dataset Summary")
-    st.write(summary)
+    print("\n===== BASIC SUMMARY =====")
+    print(get_basic_summary(df))
+
+    print("\n===== COLUMN TYPES =====")
+    print(get_column_types(df))
+
+    print("\n===== STATISTICAL SUMMARY =====")
+    print(get_statistical_summary(df))
+
+if __name__ == "__main__":
+    main()
